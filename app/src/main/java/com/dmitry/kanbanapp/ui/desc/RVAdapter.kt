@@ -17,14 +17,19 @@ class RVAdapter(
 
     fun removeItem(text: String) {
         val index = list.indexOf(text)
-        list.removeAt(index)
-        notifyItemRemoved(index)
+        if (index != -1) {
+            list.removeAt(index)
+            notifyItemRemoved(index)
+        }
+
     }
 
     fun addItem(text: String) {
-        val index = list.size
-        list.add(text)
-        notifyItemInserted(index)
+        if (!list.contains(text)) {
+            val index = list.size
+            list.add(text)
+            notifyItemInserted(index)
+        }
     }
 
 

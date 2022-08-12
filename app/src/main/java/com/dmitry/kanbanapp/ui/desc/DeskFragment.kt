@@ -1,11 +1,15 @@
 package com.dmitry.kanbanapp.ui.desc
 
+import android.content.ClipData
+import android.content.ClipDescription
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,97 +55,293 @@ class DeskFragment: Fragment(R.layout.fragment_desk) {
         doneRecyclerView.adapter = doneAdapter
 
         // Set the drag event listener for the View.
-//        toDoRecyclerView.setOnDragListener { v, e ->
-//
-//            // Handles each of the expected events.
-//            when (e.action) {
-//                DragEvent.ACTION_DRAG_STARTED -> {
-//                    // Determines if this View can accept the dragged data.
-//                    if (e.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-//                        // As an example of what your application might do, applies a blue color tint
-//                        // to the View to indicate that it can accept data.
-//                        (v as? ImageView)?.setColorFilter(Color.BLUE)
-//
-//                        // Invalidate the view to force a redraw in the new tint.
-//                        v.invalidate()
-//
-//                        // Returns true to indicate that the View can accept the dragged data.
-//                        true
-//                    } else {
-//                        // Returns false to indicate that, during the current drag and drop operation,
-//                        // this View will not receive events again until ACTION_DRAG_ENDED is sent.
-//                        false
-//                    }
-//                }
-//                DragEvent.ACTION_DRAG_ENTERED -> {
-//                    // Applies a green tint to the View.
-//                    (v as? ImageView)?.setColorFilter(Color.GREEN)
-//
-//                    // Invalidates the view to force a redraw in the new tint.
-//                    v.invalidate()
-//
-//                    // Returns true; the value is ignored.
-//                    true
-//                }
-//
-//                DragEvent.ACTION_DRAG_LOCATION ->
-//                    // Ignore the event.
-//                    true
-//                DragEvent.ACTION_DRAG_EXITED -> {
-//                    // Resets the color tint to blue.
-//                    (v as? ImageView)?.setColorFilter(Color.BLUE)
-//
-//                    // Invalidates the view to force a redraw in the new tint.
-//                    v.invalidate()
-//
-//                    // Returns true; the value is ignored.
-//                    true
-//                }
-//                DragEvent.ACTION_DROP -> {
-//                    // Gets the item containing the dragged data.
-//                    val item: ClipData.Item = e.clipData.getItemAt(0)
-//
-//                    // Gets the text data from the item.
-//                    val dragData = item.text
-//
-//                    // Displays a message containing the dragged data.
-//                    Toast.makeText(this, "Dragged data is $dragData", Toast.LENGTH_LONG).show()
-//
-//                    // Turns off any color tints.
-//                    (v as? ImageView)?.clearColorFilter()
-//
-//                    // Invalidates the view to force a redraw.
-//                    v.invalidate()
-//
-//                    // Returns true. DragEvent.getResult() will return true.
-//                    true
-//                }
-//
-//                DragEvent.ACTION_DRAG_ENDED -> {
-//                    // Turns off any color tinting.
-//                    (v as? ImageView)?.clearColorFilter()
-//
-//                    // Invalidates the view to force a redraw.
-//                    v.invalidate()
-//
-//                    // Does a getResult(), and displays what happened.
-//                    when(e.result) {
-//                        true ->
-//                            Toast.makeText(this, "The drop was handled.", Toast.LENGTH_LONG)
-//                        else ->
-//                            Toast.makeText(this, "The drop didn't work.", Toast.LENGTH_LONG)
-//                    }.show()
-//
-//                    // Returns true; the value is ignored.
-//                    true
-//                }
-//                else -> {
-//                    // An unknown action type was received.
-//                    Log.e("DragDrop Example", "Unknown action type received by View.OnDragListener.")
-//                    false
-//                }
-//            }
-//        }
+        toDoRecyclerView.setOnDragListener { v, e ->
+
+            // Handles each of the expected events.
+            when (e.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    // Determines if this View can accept the dragged data.
+                    if (e.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                        // As an example of what your application might do, applies a blue color tint
+                        // to the View to indicate that it can accept data.
+                        (v as? ImageView)?.setColorFilter(Color.BLUE)
+
+                        // Invalidate the view to force a redraw in the new tint.
+                        v.invalidate()
+
+                        // Returns true to indicate that the View can accept the dragged data.
+                        true
+                    } else {
+                        // Returns false to indicate that, during the current drag and drop operation,
+                        // this View will not receive events again until ACTION_DRAG_ENDED is sent.
+                        false
+                    }
+                }
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    // Applies a green tint to the View.
+                    (v as? ImageView)?.setColorFilter(Color.GREEN)
+
+                    // Invalidates the view to force a redraw in the new tint.
+                    v.invalidate()
+
+                    // Returns true; the value is ignored.
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_LOCATION ->
+                    // Ignore the event.
+                    true
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    // Resets the color tint to blue.
+                    (v as? ImageView)?.setColorFilter(Color.BLUE)
+
+                    // Invalidates the view to force a redraw in the new tint.
+                    v.invalidate()
+
+                    // Returns true; the value is ignored.
+                    true
+                }
+                DragEvent.ACTION_DROP -> {
+                    // Gets the item containing the dragged data.
+                    val item: ClipData.Item = e.clipData.getItemAt(0)
+
+                    // Gets the text data from the item.
+                    val dragData = item.text.toString()
+
+                    toDoAdapter.addItem(dragData)
+                    doingAdapter.removeItem(dragData)
+                    doneAdapter.removeItem(dragData)
+
+                    // Displays a message containing the dragged data.
+                    Toast.makeText(requireContext(), "Dragged data is $dragData", Toast.LENGTH_LONG).show()
+
+                    // Turns off any color tints.
+                    (v as? ImageView)?.clearColorFilter()
+
+                    // Invalidates the view to force a redraw.
+                    v.invalidate()
+
+                    // Returns true. DragEvent.getResult() will return true.
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    // Turns off any color tinting.
+                    (v as? ImageView)?.clearColorFilter()
+
+                    // Invalidates the view to force a redraw.
+                    v.invalidate()
+
+                    // Does a getResult(), and displays what happened.
+                    when(e.result) {
+                        true ->
+                            Toast.makeText(requireContext(), "The drop was handled.", Toast.LENGTH_LONG)
+                        else ->
+                            Toast.makeText(requireContext(), "The drop didn't work.", Toast.LENGTH_LONG)
+                    }.show()
+
+                    // Returns true; the value is ignored.
+                    true
+                }
+                else -> {
+                    // An unknown action type was received.
+                    Log.e("DragDrop Example", "Unknown action type received by View.OnDragListener.")
+                    false
+                }
+            }
+        }
+
+        doingRecyclerView.setOnDragListener { v, e ->
+
+            // Handles each of the expected events.
+            when (e.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    // Determines if this View can accept the dragged data.
+                    if (e.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                        // As an example of what your application might do, applies a blue color tint
+                        // to the View to indicate that it can accept data.
+                        (v as? ImageView)?.setColorFilter(Color.BLUE)
+
+                        // Invalidate the view to force a redraw in the new tint.
+                        v.invalidate()
+
+                        // Returns true to indicate that the View can accept the dragged data.
+                        true
+                    } else {
+                        // Returns false to indicate that, during the current drag and drop operation,
+                        // this View will not receive events again until ACTION_DRAG_ENDED is sent.
+                        false
+                    }
+                }
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    // Applies a green tint to the View.
+                    (v as? ImageView)?.setColorFilter(Color.GREEN)
+
+                    // Invalidates the view to force a redraw in the new tint.
+                    v.invalidate()
+
+                    // Returns true; the value is ignored.
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_LOCATION ->
+                    // Ignore the event.
+                    true
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    // Resets the color tint to blue.
+                    (v as? ImageView)?.setColorFilter(Color.BLUE)
+
+                    // Invalidates the view to force a redraw in the new tint.
+                    v.invalidate()
+
+                    // Returns true; the value is ignored.
+                    true
+                }
+                DragEvent.ACTION_DROP -> {
+                    // Gets the item containing the dragged data.
+                    val item: ClipData.Item = e.clipData.getItemAt(0)
+
+                    // Gets the text data from the item.
+                    val dragData = item.text.toString()
+
+                    toDoAdapter.removeItem(dragData)
+                    doingAdapter.addItem(dragData)
+                    doneAdapter.removeItem(dragData)
+
+                    // Displays a message containing the dragged data.
+                    Toast.makeText(requireContext(), "Dragged data is $dragData", Toast.LENGTH_LONG).show()
+
+                    // Turns off any color tints.
+                    (v as? ImageView)?.clearColorFilter()
+
+                    // Invalidates the view to force a redraw.
+                    v.invalidate()
+
+                    // Returns true. DragEvent.getResult() will return true.
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    // Turns off any color tinting.
+                    (v as? ImageView)?.clearColorFilter()
+
+                    // Invalidates the view to force a redraw.
+                    v.invalidate()
+
+                    // Does a getResult(), and displays what happened.
+                    when(e.result) {
+                        true ->
+                            Toast.makeText(requireContext(), "The drop was handled.", Toast.LENGTH_LONG)
+                        else ->
+                            Toast.makeText(requireContext(), "The drop didn't work.", Toast.LENGTH_LONG)
+                    }.show()
+
+                    // Returns true; the value is ignored.
+                    true
+                }
+                else -> {
+                    // An unknown action type was received.
+                    Log.e("DragDrop Example", "Unknown action type received by View.OnDragListener.")
+                    false
+                }
+            }
+        }
+
+        doneRecyclerView.setOnDragListener { v, e ->
+
+            // Handles each of the expected events.
+            when (e.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    // Determines if this View can accept the dragged data.
+                    if (e.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                        // As an example of what your application might do, applies a blue color tint
+                        // to the View to indicate that it can accept data.
+                        (v as? ImageView)?.setColorFilter(Color.BLUE)
+
+                        // Invalidate the view to force a redraw in the new tint.
+                        v.invalidate()
+
+                        // Returns true to indicate that the View can accept the dragged data.
+                        true
+                    } else {
+                        // Returns false to indicate that, during the current drag and drop operation,
+                        // this View will not receive events again until ACTION_DRAG_ENDED is sent.
+                        false
+                    }
+                }
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    // Applies a green tint to the View.
+                    (v as? ImageView)?.setColorFilter(Color.GREEN)
+
+                    // Invalidates the view to force a redraw in the new tint.
+                    v.invalidate()
+
+                    // Returns true; the value is ignored.
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_LOCATION ->
+                    // Ignore the event.
+                    true
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    // Resets the color tint to blue.
+                    (v as? ImageView)?.setColorFilter(Color.BLUE)
+
+                    // Invalidates the view to force a redraw in the new tint.
+                    v.invalidate()
+
+                    // Returns true; the value is ignored.
+                    true
+                }
+                DragEvent.ACTION_DROP -> {
+                    // Gets the item containing the dragged data.
+                    val item: ClipData.Item = e.clipData.getItemAt(0)
+
+                    // Gets the text data from the item.
+                    val dragData = item.text.toString()
+
+                    toDoAdapter.removeItem(dragData)
+                    doingAdapter.removeItem(dragData)
+                    doneAdapter.addItem(dragData)
+
+                    // Displays a message containing the dragged data.
+                    Toast.makeText(requireContext(), "Dragged data is $dragData", Toast.LENGTH_LONG).show()
+
+                    // Turns off any color tints.
+                    (v as? ImageView)?.clearColorFilter()
+
+                    // Invalidates the view to force a redraw.
+                    v.invalidate()
+
+                    // Returns true. DragEvent.getResult() will return true.
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    // Turns off any color tinting.
+                    (v as? ImageView)?.clearColorFilter()
+
+                    // Invalidates the view to force a redraw.
+                    v.invalidate()
+
+                    // Does a getResult(), and displays what happened.
+                    when(e.result) {
+                        true ->
+                            Toast.makeText(requireContext(), "The drop was handled.", Toast.LENGTH_LONG)
+                        else ->
+                            Toast.makeText(requireContext(), "The drop didn't work.", Toast.LENGTH_LONG)
+                    }.show()
+
+                    // Returns true; the value is ignored.
+                    true
+                }
+                else -> {
+                    // An unknown action type was received.
+                    Log.e("DragDrop Example", "Unknown action type received by View.OnDragListener.")
+                    false
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
