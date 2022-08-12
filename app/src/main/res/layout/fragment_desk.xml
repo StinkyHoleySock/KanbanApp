@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_todo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/todo"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:background="@color/todo_color"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_todo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:background="@color/todo_color"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_doing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/doing"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:background="@color/doing_color"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_doing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:background="@color/doing_color"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/done"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:background="@color/done_color"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:background="@color/done_color"/>
+
+</LinearLayout>
